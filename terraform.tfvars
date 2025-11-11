@@ -10,3 +10,5 @@ instance_name = "my-terraform-ec2"
 # AWS Key Pair name for SSH access (create this in AWS console first)
 # If you don't need SSH access, you can comment this out
 key_pair_name = "my-terraform-key"
+
+##
