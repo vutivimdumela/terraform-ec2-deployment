@@ -27,14 +27,22 @@ This Terraform project deploys an EC2 instance with type `t3.micro` on AWS, incl
      chmod 400 my-terraform-key.pem
      ```
 
+4. **S3 Bucket for Terraform State** (configured in backend.tf)
+   - This project uses remote state storage in S3 bucket: `terraform-state-buekts`
+   - The bucket should already exist in your AWS account
+   - State file will be stored at: `terraform-ec2-deployment/terraform.tfstate`
+   - Ensure your AWS credentials have access to this S3 bucket
+
 ## Project Structure
 
 ```
 pipeline-project/
-├── main.tf          # Main Terraform configuration
-├── variables.tf     # Input variables
-├── outputs.tf       # Output values
-└── README.md        # This file
+├── main.tf                    # Main Terraform configuration
+├── backend.tf                 # S3 backend configuration for remote state
+├── variables.tf               # Input variables
+├── outputs.tf                 # Output values
+├── terraform.tfvars.example   # Example variables file
+└── README.md                  # This file
 ```
 
 ## Configuration
@@ -68,7 +76,21 @@ You can customize the deployment by setting these variables:
 
 ## Deployment Steps
 
-1. **Initialize Terraform**:
+### First Time Setup (Backend Migration)
+
+If you're migrating from local state to S3 backend:
+
+1. **Initialize Terraform with backend**:
+   ```bash
+   terraform init
+   ```
+   Terraform will detect the backend configuration and ask if you want to migrate existing state.
+
+2. **If migrating existing state, type `yes`** when prompted to copy state to S3.
+
+### Regular Deployment
+
+1. **Initialize Terraform** (downloads providers and configures backend):
    ```bash
    terraform init
    ```
@@ -88,6 +110,12 @@ You can customize the deployment by setting these variables:
    ```bash
    terraform output
    ```
+
+### Important Notes for S3 Backend
+
+- **State Locking**: Consider creating a DynamoDB table for state locking to prevent concurrent modifications
+- **Versioning**: Enable versioning on your S3 bucket for state file history
+- **Encryption**: The state file is encrypted at rest in S3 as configured in `backend.tf`
 
 ## What Gets Created
 
