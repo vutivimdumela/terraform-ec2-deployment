@@ -76,7 +76,6 @@ resource "aws_security_group" "ec2_sg" {
 resource "aws_instance" "web_server" {
   ami                    = data.aws_ami.amazon_linux.id
   instance_type          = "t3.micro"
-  key_name              = var.key_pair_name
   vpc_security_group_ids = [aws_security_group.ec2_sg.id]
 
   # User data script to install Apache web server
