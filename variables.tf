@@ -9,14 +9,3 @@ variable "instance_name" {
   type        = string
   default     = "terraform-ec2-instance"
 }
-
-variable "key_pair_name" {
-  description = "Name of the AWS key pair to use for SSH access"
-  type        = string
-  default     = null
-  
-  validation {
-    condition     = var.key_pair_name != ""
-    error_message = "Key pair name cannot be an empty string."
-  }
-}
